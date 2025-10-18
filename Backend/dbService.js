@@ -111,6 +111,42 @@ class DbService{
         }
    }
 
+   // Getting user by the correct username
+    async getUserByUsername(username) {
+        try {
+            const user = await new Promise((resolve, reject) => {
+                const query = "SELECT * FROM names WHERE username = ?";
+                connection.query(query, [username], (err, results) => {
+                    if (err) reject(new Error(err.message));
+                    else resolve(results[0]);
+                });
+            });
+            return user;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    // Update sign-in time
+    async updateSignIn(userId) {
+        try {
+            const now = new Date();
+            const result = await new Promise((resolve, reject) => {
+                const query = "UPDATE names SET signInTime = ? WHERE id = ?";
+                connection.query(query, [now, userId], (err, res) => {
+                    if (err) reject(new Error(err.message));
+                    else resolve(res.affectedRows);
+                });
+            });
+    
+            return result === 1 ? true : false;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+    
+
 
    async insertNewName(name){
          try{
@@ -172,6 +208,7 @@ class DbService{
           throw error;
       }
   }
+  
   
    
 

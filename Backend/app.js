@@ -153,6 +153,50 @@ app.get('/testdb', (request, response) => {
     .catch(err => console.log(err));
 });
 
+// Login service
+app.post("/login", async (req, res) => {
+    const { username, password } = req.body;
+
+    // Basic input validation
+    if (!username || !password) {
+        return res.status(400).json({ message: "Missing username or password" });
+    }
+
+    try {
+        console.log("Login attempt:", username);
+
+        // Use the singleton instance of DbService
+        const DbService = require('./dbService');
+        const dbService = DbService.getDbServiceInstance();
+
+        // Get the user by username
+        const user = await dbService.getUserByUsername(username);
+        console.log("User fetched:", user);
+
+        if (!user) {
+            return res.status(401).json({ message: "Invalid username or password" });
+        }
+
+        // Plaintext password comparison for now
+        const validPassword = (password === user.password);
+        console.log("Password check result:", validPassword);
+
+        if (!validPassword) {
+            return res.status(401).json({ message: "Invalid username or password" });
+        }
+
+        // Update last sign-in timestamp
+        await dbService.updateSignIn(user.userid);
+        console.log("Sign-in timestamp updated for:", user.userid);
+
+        res.status(200).json({ message: "Login successful" });
+    } catch (error) {
+        console.error("Login error:", error);
+        res.status(500).json({ message: "Server error during login" });
+    }
+});
+
+
 
 // set up the web server listener
 // if we use .env to configure
