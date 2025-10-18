@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en"></html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="stylesheet.css">
+  <title>Login Page</title>
+</head>
+<body>
+    <main>
+        <input type="text" id="login-username-input" placeholder="Username">
+        <input type="password" id="login-password-input" placeholder="Password">
+        <button id="login-btn">Login</button>
+
+        <section hidden>
+            <a href="index.html">
+            <button>Go to Main Page</button>
+            </a>
+        </section>
+
+        <br>
+
+        <!-- testing to see if i can add all inputs here -->
+         <!-- hiding section until register button is clicked -->
+        <button id="register-btn">Register</button>
+
+        <section hidden id="register-section">
+            <label>First Name:</label>
+            <input type="text" id="firstname-input" placeholder="First Name">
+            <label>Last Name:</label>
+            <input type="text" id="lastname-input" placeholder="Last Name">
+            <label>Username:</label>
+            <input type="text" id="username-input" placeholder="Username">
+            <label>Password:</label>
+            <input type="password" id="password-input" placeholder="Password">
+            <label>Salary:</label>
+            <input type="number" id="salary-input" placeholder="Salary">
+            <label>Age:</label>
+            <input type="number" id="age-input" placeholder="Age">
+            <button id="submit-register-btn">Submit Registration</button>
+        </section>
+    </main>
+  <script src="login.js"></script>
+</body>
+</html>

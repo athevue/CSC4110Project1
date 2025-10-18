@@ -319,12 +319,12 @@ function loadHTMLTable(data){
     */
 
     let tableHtml = "";
-    data.forEach(function ({id, name, lastname, date_added, age, salary, signInCount, username, password}){
+    data.forEach(function ({id, name, lastName, date_added, age, salary, signInCount, username, password}){
          tableHtml += "<tr>";
 
          tableHtml +=`<td>${id}</td>`;
          tableHtml +=`<td>${name}</td>`;
-         tableHtml +=`<td>${lastname}</td>`;
+         tableHtml +=`<td>${lastName}</td>`;
          tableHtml += `<td>${new Date(date_added).toLocaleDateString("en-US")}</td>` //changed to just date
          tableHtml +=`<td>${age}</td>`;
          tableHtml +=`<td>${salary}</td>`;
