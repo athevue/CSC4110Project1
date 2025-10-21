@@ -130,32 +130,39 @@ class DbService{
     // Update sign-in time
     async updateSignIn(userId) {
         try {
-            const now = new Date();
+            const now = new Date();    
             const result = await new Promise((resolve, reject) => {
-                const query = "UPDATE names SET signInTime = ? WHERE id = ?";
+                const query = `
+                    UPDATE names 
+                    SET signInTime = ?, signInCount = IFNULL(signInCount, 0) + 1
+                    WHERE id = ?
+                `;
                 connection.query(query, [now, userId], (err, res) => {
                     if (err) reject(new Error(err.message));
                     else resolve(res.affectedRows);
                 });
             });
     
-            return result === 1 ? true : false;
+            return result === 1;
         } catch (error) {
             console.log(error);
             throw error;
         }
     }
     
+    
+    
+    
 
 
    async insertNewName(name){
          try{
-            const dateAdded = new Date();
+            const date_added = new Date();
             // use await to call an asynchronous function
             const insertId = await new Promise((resolve, reject) => 
             {
                const query = "INSERT INTO names (name, date_added) VALUES (?, ?);";
-               connection.query(query, [name, dateAdded], (err, result) => {
+               connection.query(query, [name, date_added], (err, result) => {
                    if(err) reject(new Error(err.message));
                    else resolve(result.insertId);
                });
@@ -164,7 +171,7 @@ class DbService{
             return{
                  id: insertId,
                  name: name,
-                 dateAdded: dateAdded
+                 date_added: date_added
             }
          } catch(error){
                console.log(error);
@@ -173,19 +180,19 @@ class DbService{
 
    async insertNewUser(user) {
       try {
-          const { username, password, name, lastName, salary, age } = user;
-          const signintime = new Date();
+          const { username, password, name, lastName, salary, age} = user;
+          const date_added = new Date();
   
           const insertId = await new Promise((resolve, reject) => {
               const query = `
                   INSERT INTO names 
-                  (username, password, name, lastName, salary, age, signintime)
+                  (username, password, name, lastName, salary, age, date_added)
                   VALUES (?, ?, ?, ?, ?, ?, ?);
               `;
   
               connection.query(
                   query,
-                  [username, password, name, lastName, salary, age, signintime],
+                  [username, password, name, lastName, salary, age, date_added],
                   (err, result) => {
                       if (err) reject(new Error(err.message));
                       else resolve(result.insertId);
@@ -201,7 +208,7 @@ class DbService{
               lastName,
               salary,
               age,
-              signintime
+              date_added
           };
       } catch (error) {
           console.log(error);
@@ -214,7 +221,7 @@ class DbService{
 
    async searchByName(name){
         try{
-             const dateAdded = new Date();
+             const date_added = new Date();
              // use await to call an asynchronous function
              const response = await new Promise((resolve, reject) => 
                   {

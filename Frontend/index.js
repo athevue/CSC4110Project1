@@ -102,10 +102,13 @@ registerBtn.onclick = function () {
     const salary = parseFloat(document.querySelector('#salary-input').value);
     const age = parseInt(document.querySelector('#age-input').value);
 
+    //date added
+    const dateAdded = new Date().toISOString();
+
     fetch('http://localhost:5050/register', {
         headers: { 'Content-type': 'application/json' },
         method: 'POST',
-        body: JSON.stringify({ name, lastName, username, password, salary, age })
+        body: JSON.stringify({ name, lastName, username, password, salary, age, dateAdded})
     })
     .then(response => response.json())
     .then(data => {
@@ -201,6 +204,7 @@ updateBtn.onclick = function(){
     debug(updateBtn.value);
     
     const updatedNameInput = document.querySelector('#update-name-input');
+
 
     fetch('http://localhost:5050/update',
           {
@@ -319,7 +323,7 @@ function loadHTMLTable(data){
     */
 
     let tableHtml = "";
-    data.forEach(function ({id, name, lastName, date_added, age, salary, signInCount, username, password}){
+    data.forEach(function ({id, name, lastName, date_added, age, salary, signInCount, signInTime, username, password}){
          tableHtml += "<tr>";
 
          tableHtml +=`<td>${id}</td>`;
@@ -329,6 +333,9 @@ function loadHTMLTable(data){
          tableHtml +=`<td>${age}</td>`;
          tableHtml +=`<td>${salary}</td>`;
          tableHtml +=`<td>${signInCount}</td>`;
+
+         tableHtml +=`<td>${new Date(signInTime).toLocaleString("en-US")}</td>`; // full date time
+         
          tableHtml +=`<td>${username}</td>`;
          tableHtml +=`<td>${password}</td>`;
 
@@ -340,3 +347,5 @@ function loadHTMLTable(data){
 
     table.innerHTML = tableHtml;
 }
+
+

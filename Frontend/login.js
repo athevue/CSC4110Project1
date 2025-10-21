@@ -59,11 +59,14 @@ submitRegisterBtn.addEventListener('click', () => {
         return;
     }
 
+    // ✅ Add date and time (formatted for MySQL DATETIME)
+    const dateAdded = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
     // Send POST request to backend
     fetch('http://localhost:5050/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, lastName, username, password, salary, age })
+        body: JSON.stringify({ name, lastName, username, password, salary, age, dateAdded })
     })
     .then(response => response.json())
     .then(data => {

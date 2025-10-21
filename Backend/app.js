@@ -37,7 +37,7 @@ app.post('/insert', (request, response) => {
 app.post('/register', (request, response) => {
     console.log("Registering new user");
 
-    const { name, lastName, username, password, salary, age } = request.body;
+    const { name, lastName, username, password, salary, age, dateAdded} = request.body;
     const db = dbService.getDbServiceInstance();
 
     const newUser = {
@@ -46,7 +46,8 @@ app.post('/register', (request, response) => {
         name,  // matches DB column
         lastName,
         salary,
-        age
+        age,
+        dateAdded
     };
 
     const result = db.insertNewUser(newUser);
@@ -185,9 +186,12 @@ app.post("/login", async (req, res) => {
             return res.status(401).json({ message: "Invalid username or password" });
         }
 
+
+        console.log("User fetched:", user);
+
         // Update last sign-in timestamp
-        await dbService.updateSignIn(user.userid);
-        console.log("Sign-in timestamp updated for:", user.userid);
+        await dbService.updateSignIn(user.id);
+        console.log("Sign-in timestamp updated for:", user.id);
 
         res.status(200).json({ message: "Login successful" });
     } catch (error) {
