@@ -201,6 +201,58 @@ app.post("/login", async (req, res) => {
 });
 
 
+// Search route
+app.post('/search', async (req, res) => {
+    try {
+        const { query, minSalary, maxSalary, minAge, maxAge, refUserId, filterType } = req.body;
+        const db = dbService.getDbServiceInstance();
+        let result;
+
+        switch (filterType) {
+            case "salaryRange":
+                result = await db.searchBySalaryRange(minSalary, maxSalary);
+                break;
+            case "ageRange":
+                result = await db.searchByAgeRange(minAge, maxAge);
+                break;
+            case "after":
+                result = await db.searchRegisteredAfter(refUserId);
+                break;
+            case "sameDay":
+                result = await db.searchRegisteredSameDay(refUserId);
+                break;
+            case "neverSignedIn":
+                result = await db.searchNeverSignedIn();
+                break;
+            case "registeredToday":
+                result = await db.searchRegisteredToday();
+                break;
+            default: // default is search by name or user ID
+                result = await db.searchByNameOrId(query);
+        }
+
+        res.json({ data: result });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/search', async (req, res) => {
+    const { query, minSalary, maxSalary, minAge, maxAge, refUserId, filterType } = req.body;
+    const db = dbService.getDbServiceInstance();
+
+    try {
+        const results = await db.searchUsers({ query, minSalary, maxSalary, minAge, maxAge, refUserId, filterType });
+        res.json({ data: results });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
 
 // set up the web server listener
 // if we use .env to configure

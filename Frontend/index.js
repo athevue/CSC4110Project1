@@ -335,7 +335,7 @@ function loadHTMLTable(data){
          tableHtml +=`<td>${signInCount}</td>`;
 
          tableHtml +=`<td>${new Date(signInTime).toLocaleString("en-US")}</td>`; // full date time
-         
+
          tableHtml +=`<td>${username}</td>`;
          tableHtml +=`<td>${password}</td>`;
 
@@ -347,5 +347,40 @@ function loadHTMLTable(data){
 
     table.innerHTML = tableHtml;
 }
+
+
+document.getElementById("searchBtn").addEventListener("click", () => {
+    const query = document.getElementById("mainSearch").value;
+    const minSalary = document.getElementById("minSalary").value;
+    const maxSalary = document.getElementById("maxSalary").value;
+    const minAge = document.getElementById("minAge").value;
+    const maxAge = document.getElementById("maxAge").value;
+    const refUserId = document.getElementById("refUserId").value;
+    const filterType = document.getElementById("filterType").value;
+
+    fetch('http://localhost:5050/search', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query, minSalary, maxSalary, minAge, maxAge, refUserId, filterType })
+    })
+    .then(res => res.json())
+    .then(data => loadHTMLTable(data.data))
+    .catch(err => console.error(err));
+});
+
+
+document.getElementById("clearBtn").addEventListener("click", () => {
+    document.getElementById("mainSearch").value = "";
+    document.getElementById("minSalary").value = "";
+    document.getElementById("maxSalary").value = "";
+    document.getElementById("minAge").value = "";
+    document.getElementById("maxAge").value = "";
+    document.getElementById("refUserId").value = "";
+    document.getElementById("filterType").selectedIndex = 0;
+
+    fetch('http://localhost:5050/getAll')
+        .then(res => res.json())
+        .then(data => loadHTMLTable(data.data));
+});
 
 

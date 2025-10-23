@@ -21,6 +21,27 @@
     <input type="number" id="age-input" placeholder="Age">
     <button id="register-btn">Register</button>
 
+    <br><br>
+
+
+    <input type="text" placeholder="Search by Name or User ID" id="mainSearch">
+    <button id="searchBttn">Search</button>
+    <button id="clear-btn">Clear</button>
+      <!-- testing search bar -->
+      <div id="filters" >
+        <input type="number" id="minSalary" placeholder="Min Salary">
+        <input type="number" id="maxSalary" placeholder="Max Salary">
+        <input type="number" id="minAge" placeholder="Min Age">
+        <input type="number" id="maxAge" placeholder="Max Age">
+        <input type="text" id="refUserId" placeholder="Reference User ID (for date filters)">
+        <select id="filter-type">
+            <option value="after">Registered After User</option>
+            <option value="sameDay">Registered Same Day as User</option>
+            <option value="neverSignedIn">Never Signed In</option>
+            <option value="registeredToday">Registered Today</option>
+        </select>
+    </div>
+    
       
  
      <br><br><br>
