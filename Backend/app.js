@@ -43,7 +43,7 @@ app.post('/register', (request, response) => {
     const newUser = {
         username,
         password,
-        name,  // matches DB column
+        name,  
         lastName,
         salary,
         age,

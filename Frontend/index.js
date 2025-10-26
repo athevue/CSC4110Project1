@@ -332,9 +332,9 @@ function loadHTMLTable(data){
          tableHtml += `<td>${new Date(date_added).toLocaleDateString("en-US")}</td>` //changed to just date
          tableHtml +=`<td>${age}</td>`;
          tableHtml +=`<td>${salary}</td>`;
-         tableHtml +=`<td>${signInCount}</td>`;
+         tableHtml += `<td>${signInCount ? signInCount : 0}</td>`;
 
-         tableHtml +=`<td>${new Date(signInTime).toLocaleString("en-US")}</td>`; // full date time
+         tableHtml += `<td>${signInTime ? new Date(signInTime).toLocaleString("en-US") : "Never signed-in"}</td>`;
 
          tableHtml +=`<td>${username}</td>`;
          tableHtml +=`<td>${password}</td>`;
