@@ -3,16 +3,143 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="stylesheet.css">
   <title>DB Project 1</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f8fafc;
+      margin: 0;
+      padding: 2rem;
+      color: #115740;
+    }
+
+    main {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    h1 {
+      color: #115740;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    input, select {
+      padding: 0.7rem;
+      margin: 0.4rem 0.3rem;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      background-color: #f9fafb;
+      color: #115740;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    input:focus, select:focus {
+      border-color: #FDB913;
+    }
+
+    button {
+      background-color: #115740;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 0.4rem 0.2rem;
+      font-weight: 600;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #0d4d33;
+      transform: translateY(-2px);
+    }
+
+    #register-btn {
+      background-color: #FDB913;
+      color: #115740;
+    }
+
+    #register-btn:hover {
+      background-color: #f7b100;
+    }
+
+    #clear-btn {
+      background-color: #ccc;
+      color: #115740;
+    }
+
+    #clear-btn:hover {
+      background-color: #b3b3b3;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+      text-align: center;
+      padding: 12px;
+      border: 1px solid #e5e7eb;
+    }
+
+    th {
+      background-color: #115740;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+
+    tr:hover {
+      background-color: #f1f5f9;
+      transition: background-color 0.2s ease;
+    }
+
+    #update-row {
+      margin-top: 2rem;
+      padding: 1rem;
+      background-color: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    #update-row label {
+      margin-right: 0.5rem;
+    }
+
+    section {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    a {
+      text-decoration: none;
+    }
+  </style>
 </head>
+
 <body>
   <main>
-      <!-- <label>Name:</label>
-      <input type="text" id="name-input">
-      <button id="add-name-btn">Add Name</button> -->
-
-      <!-- testing to see if i can add all inputs here -->
+    <h1>Database Management Project</h1>
+    
     <input type="text" id="firstname-input" placeholder="First Name">
     <input type="text" id="lastname-input" placeholder="Last Name">
     <input type="text" id="username-input" placeholder="Username">
@@ -21,61 +148,48 @@
     <input type="number" id="age-input" placeholder="Age">
     <button id="register-btn">Register</button>
 
-    <br><br>
+    <br><br><br>
 
+    <div>
+      <select id="search-type">
+        <option value="name">By Name</option>
+        <option value="userid">By User ID</option>
+        <option value="salary">By Salary Range</option>
+        <option value="age">By Age Range</option>
+        <option value="afterUser">Registered After User</option>
+        <option value="sameDay">Registered Same Day As User</option>
+        <option value="neverSignedIn">Never Signed In</option>
+      </select>
 
-    <input type="text" placeholder="Search by Name or User ID" id="mainSearch">
-    <button id="searchBttn">Search</button>
-    <button id="clear-btn">Clear</button>
-      <!-- testing search bar -->
-      <div id="filters" >
-        <input type="number" id="minSalary" placeholder="Min Salary">
-        <input type="number" id="maxSalary" placeholder="Max Salary">
-        <input type="number" id="minAge" placeholder="Min Age">
-        <input type="number" id="maxAge" placeholder="Max Age">
-        <input type="text" id="refUserId" placeholder="Reference User ID (for date filters)">
-        <select id="filter-type">
-            <option value="after">Registered After User</option>
-            <option value="sameDay">Registered Same Day as User</option>
-            <option value="neverSignedIn">Never Signed In</option>
-            <option value="registeredToday">Registered Today</option>
-        </select>
+      <input placeholder="Search value" id="search-input">
+      <input placeholder="Min" id="min" type="number">
+      <input placeholder="Max" id="max" type="number">
+      <button id="search-btn">Search</button>
+      <button id="clear-btn">Clear</button>
     </div>
-    
-      
- 
-     <br><br><br>
-     <div> 
-        <input placeholder="search by name" id="search-input">
-        <button id="search-btn">Search</button>
-        <button id="clear-btn">Clear</button>
-     </div>
 
+    <table id="table">
+      <thead>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Last Name</th>
+        <th>Date Added</th>
+        <th>Age</th>
+        <th>Salary</th>
+        <th># of sign ins</th>
+        <th>Last sign in time</th>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Delete</th>
+        <th>Edit</th>
+      </thead>
+      <tbody></tbody>
+    </table>
 
-     <table id="table">
-         <thead>
-            <th style="padding: 12px 15px; border: 1px solid #ddd;">Id</th>
-            <th style="padding: 12px 15px; border: 1px solid #ddd;">Name</th>
-            <th style="padding: 12px 15px; border: 1px solid #ddd;">Last Name</th>
-            <th style="padding: 12px 15px; border: 1px solid #ddd;">Date Added</th>
-            <th style="padding: 12px 15px; border: 1px solid #ddd;">Age</th>
-            <th style="padding: 12px 15px; border: 1px solid #ddd;">Salary</th>
-            <th style="padding: 12px 15px; border: 1px solid #ddd;"># of sign ins</th>
-
-            <th style="padding: 12px 15px; border: 1px solid #ddd;">Last sign in time</th> 
-
-            <th style="padding: 12px 15px; border: 1px solid #ddd;">Username</th>
-            <th style="padding: 12px 15px; border: 1px solid #ddd;">Password</th>
-            <th style="padding: 12px 15px; border: 1px solid #ddd;">Delete</th>
-            <th style="padding: 12px 15px; border: 1px solid #ddd;">Edit</th>
-         </thead>
-         <tbody></tbody>
-     </table>
-
-     <section hidden id="update-row">
-         <label>Name:</label>
-         <input type="text" id="update-name-input">
-         <button id="update-row-btn" value="">Update</button>
+    <section hidden id="update-row">
+      <label>Name:</label>
+      <input type="text" id="update-name-input">
+      <button id="update-row-btn" value="">Update</button>
     </section>
 
     <section>
@@ -83,7 +197,8 @@
         <button>Go to Login Page</button>
       </a>
     </section>
-</main>
-<script src="index.js"></script>
+  </main>
+
+  <script src="index.js"></script>
 </body>
 </html>

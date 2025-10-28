@@ -121,16 +121,62 @@ registerBtn.onclick = function () {
 
 
 // when the searchBtn is clicked
-const searchBtn =  document.querySelector('#search-btn');
-searchBtn.onclick = function (){
-    const searchInput = document.querySelector('#search-input');
-    const searchValue = searchInput.value;
-    searchInput.value = "";
+// const searchBtn =  document.querySelector('#search-btn');
+// searchBtn.onclick = function (){
+//     const searchInput = document.querySelector('#search-input');
+//     const searchValue = searchInput.value;
+//     searchInput.value = "";
 
-    fetch('http://localhost:5050/search/' + searchValue)
-    .then(response => response.json())
-    .then(data => loadHTMLTable(data['data']));
-}
+//     fetch('http://localhost:5050/search/' + searchValue)
+//     .then(response => response.json())
+//     .then(data => loadHTMLTable(data['data']));
+// }
+
+
+// testing new advnaced search *************
+const searchBtn = document.querySelector('#search-btn');
+searchBtn.onclick = function () {
+  const searchInput = document.querySelector('#search-input').value.trim();
+  const typeSelect = document.querySelector('#search-type').value; // dropdown type selector
+  const min = document.querySelector('#min').value;
+  const max = document.querySelector('#max').value;
+
+  let url = 'http://localhost:5050/search?';
+
+  switch (typeSelect) {
+    case "name":
+      url += `type=name&name=${searchInput}`;
+      break;
+    case "userid":
+      url += `type=userid&userid=${searchInput}`;
+      break;
+    case "salary":
+      url += `type=salary&min=${min}&max=${max}`;
+      break;
+    case "age":
+      url += `type=age&min=${min}&max=${max}`;
+      break;
+    case "afterUser":
+      url += `type=afterUser&userid=${searchInput}`;
+      break;
+    case "neverSignedIn":
+      url += `type=neverSignedIn`;
+      break;
+    case "sameDay":
+      url += `type=sameDay&userid=${searchInput}`;
+      break;
+    default:
+      url += `type=all`;
+  }
+
+  fetch(url)
+    .then(res => res.json())
+    .then(data => loadHTMLTable(data['data']))
+    .catch(err => console.error(err));
+};
+
+
+
 
 // when the clearBtn is clicked
 const clearBtn = document.querySelector('#clear-btn');
@@ -334,7 +380,7 @@ function loadHTMLTable(data){
          tableHtml +=`<td>${salary}</td>`;
          tableHtml += `<td>${signInCount ? signInCount : 0}</td>`;
 
-         tableHtml += `<td>${signInTime ? new Date(signInTime).toLocaleString("en-US") : "Never signed-in"}</td>`;
+         tableHtml += `<td>${signInTime ? new Date(signInTime).toLocaleString("en-US") : "NULL"}</td>`;
 
          tableHtml +=`<td>${username}</td>`;
          tableHtml +=`<td>${password}</td>`;
@@ -348,39 +394,5 @@ function loadHTMLTable(data){
     table.innerHTML = tableHtml;
 }
 
-
-document.getElementById("searchBtn").addEventListener("click", () => {
-    const query = document.getElementById("mainSearch").value;
-    const minSalary = document.getElementById("minSalary").value;
-    const maxSalary = document.getElementById("maxSalary").value;
-    const minAge = document.getElementById("minAge").value;
-    const maxAge = document.getElementById("maxAge").value;
-    const refUserId = document.getElementById("refUserId").value;
-    const filterType = document.getElementById("filterType").value;
-
-    fetch('http://localhost:5050/search', {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query, minSalary, maxSalary, minAge, maxAge, refUserId, filterType })
-    })
-    .then(res => res.json())
-    .then(data => loadHTMLTable(data.data))
-    .catch(err => console.error(err));
-});
-
-
-document.getElementById("clearBtn").addEventListener("click", () => {
-    document.getElementById("mainSearch").value = "";
-    document.getElementById("minSalary").value = "";
-    document.getElementById("maxSalary").value = "";
-    document.getElementById("minAge").value = "";
-    document.getElementById("maxAge").value = "";
-    document.getElementById("refUserId").value = "";
-    document.getElementById("filterType").selectedIndex = 0;
-
-    fetch('http://localhost:5050/getAll')
-        .then(res => res.json())
-        .then(data => loadHTMLTable(data.data));
-});
 
 

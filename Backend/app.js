@@ -61,8 +61,6 @@ app.post('/register', (request, response) => {
 });
 
 
-
-
 // read 
 app.get('/getAll', (request, response) => {
     
@@ -77,25 +75,63 @@ app.get('/getAll', (request, response) => {
 });
 
 
-app.get('/search/:name', (request, response) => { // we can debug by URL
+// app.get('/search/:name', (request, response) => { // we can debug by URL
     
-    const {name} = request.params;
+//     const {name} = request.params;
     
-    console.log(name);
+//     console.log(name);
 
+//     const db = dbService.getDbServiceInstance();
+
+//     let result;
+//     if(name === "all") // in case we want to search all
+//        result = db.getAllData()
+//     else 
+//        result =  db.searchByName(name); // call a DB function
+
+//     result
+//     .then(data => response.json({data: data}))
+//     .catch(err => console.log(err));
+// });
+
+// search with query parameters
+app.get('/search', (req, res) => {
     const db = dbService.getDbServiceInstance();
-
+  
+    const { type, name, id, min, max } = req.query;
     let result;
-    if(name === "all") // in case we want to search all
-       result = db.getAllData()
-    else 
-       result =  db.searchByName(name); // call a DB function
-
+  
+    switch (type) {
+      case "name":
+        result = db.searchByName(name);
+        break;
+      case "id":
+        result = db.searchByUserId(id);
+        break;
+      case "salary":
+        result = db.searchBySalaryRange(min, max);
+        break;
+      case "age":
+        result = db.searchByAgeRange(min, max);
+        break;
+      case "afterUser":
+        result = db.searchAfterUser(id);
+        break;
+      case "neverSignedIn":
+        result = db.searchNeverSignedIn();
+        break;
+      case "sameDay":
+        result = db.searchSameDayAsUser(id);
+        break;
+      default:
+        result = db.getAllData();
+    }
+  
     result
-    .then(data => response.json({data: data}))
-    .catch(err => console.log(err));
-});
-
+      .then(data => res.json({ data }))
+      .catch(err => console.log(err));
+  });
+  
 
 // update
 app.patch('/update', 
@@ -201,56 +237,6 @@ app.post("/login", async (req, res) => {
 });
 
 
-// Search route
-app.post('/search', async (req, res) => {
-    try {
-        const { query, minSalary, maxSalary, minAge, maxAge, refUserId, filterType } = req.body;
-        const db = dbService.getDbServiceInstance();
-        let result;
-
-        switch (filterType) {
-            case "salaryRange":
-                result = await db.searchBySalaryRange(minSalary, maxSalary);
-                break;
-            case "ageRange":
-                result = await db.searchByAgeRange(minAge, maxAge);
-                break;
-            case "after":
-                result = await db.searchRegisteredAfter(refUserId);
-                break;
-            case "sameDay":
-                result = await db.searchRegisteredSameDay(refUserId);
-                break;
-            case "neverSignedIn":
-                result = await db.searchNeverSignedIn();
-                break;
-            case "registeredToday":
-                result = await db.searchRegisteredToday();
-                break;
-            default: // default is search by name or user ID
-                result = await db.searchByNameOrId(query);
-        }
-
-        res.json({ data: result });
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: error.message });
-    }
-});
-
-app.post('/search', async (req, res) => {
-    const { query, minSalary, maxSalary, minAge, maxAge, refUserId, filterType } = req.body;
-    const db = dbService.getDbServiceInstance();
-
-    try {
-        const results = await db.searchUsers({ query, minSalary, maxSalary, minAge, maxAge, refUserId, filterType });
-        res.json({ data: results });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: err.message });
-    }
-});
 
 
 

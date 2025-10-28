@@ -151,147 +151,6 @@ class DbService{
     }
     
     
-    // Search by name OR user ID
-async searchByNameOrId(query) {
-    try {
-        const response = await new Promise((resolve, reject) => {
-            const id = parseInt(query, 10);
-            const isId = !isNaN(id);
-            let sql = isId 
-                ? "SELECT * FROM names WHERE id = ?" 
-                : "SELECT * FROM names WHERE name LIKE ? OR lastName LIKE ?";
-            const params = isId ? [id] : [`%${query}%`, `%${query}%`];
-            connection.query(sql, params, (err, results) => {
-                if (err) reject(err);
-                else resolve(results);
-            });
-        });
-        return response;
-    } catch (err) {
-        console.log(err);
-    }
-}
-
-// Salary range
-async searchBySalaryRange(min, max) {
-    try {
-        const response = await new Promise((resolve, reject) => {
-            const sql = "SELECT * FROM names WHERE salary BETWEEN ? AND ?";
-            connection.query(sql, [min, max], (err, results) => {
-                if (err) reject(err);
-                else resolve(results);
-            });
-        });
-        return response;
-    } catch (err) { console.log(err); }
-}
-
-// Age range
-async searchByAgeRange(min, max) {
-    try {
-        const response = await new Promise((resolve, reject) => {
-            const sql = "SELECT * FROM names WHERE age BETWEEN ? AND ?";
-            connection.query(sql, [min, max], (err, results) => {
-                if (err) reject(err);
-                else resolve(results);
-            });
-        });
-        return response;
-    } catch (err) { console.log(err); }
-}
-
-// Registered after a user
-async searchRegisteredAfter(userId) {
-    try {
-        const response = await new Promise((resolve, reject) => {
-            const sql = `
-                SELECT * FROM names 
-                WHERE date_added > (SELECT date_added FROM names WHERE id = ?)`;
-            connection.query(sql, [userId], (err, results) => {
-                if (err) reject(err);
-                else resolve(results);
-            });
-        });
-        return response;
-    } catch (err) { console.log(err); }
-}
-
-// Registered same day as a user
-async searchRegisteredSameDay(userId) {
-    try {
-        const response = await new Promise((resolve, reject) => {
-            const sql = `
-                SELECT * FROM names 
-                WHERE DATE(date_added) = (SELECT DATE(date_added) FROM names WHERE id = ?)`;
-            connection.query(sql, [userId], (err, results) => {
-                if (err) reject(err);
-                else resolve(results);
-            });
-        });
-        return response;
-    } catch (err) { console.log(err); }
-}
-
-// Never signed in
-async searchNeverSignedIn() {
-    try {
-        const response = await new Promise((resolve, reject) => {
-            const sql = "SELECT * FROM names WHERE signInCount IS NULL OR signInCount = 0";
-            connection.query(sql, (err, results) => {
-                if (err) reject(err);
-                else resolve(results);
-            });
-        });
-        return response;
-    } catch (err) { console.log(err); }
-}
-
-// Registered today
-async searchRegisteredToday() {
-    try {
-        const response = await new Promise((resolve, reject) => {
-            const sql = "SELECT * FROM names WHERE DATE(date_added) = CURDATE()";
-            connection.query(sql, (err, results) => {
-                if (err) reject(err);
-                else resolve(results);
-            });
-        });
-        return response;
-    } catch (err) { console.log(err); }
-}
-
-async searchUsers({ query, minSalary, maxSalary, minAge, maxAge, refUserId, filterType }) {
-    try {
-        let sql = "SELECT * FROM names WHERE 1=1";
-        const params = [];
-
-        if(query) sql += " AND (name LIKE ? OR id = ?)", params.push(`%${query}%`, query);
-        if(minSalary) sql += " AND salary >= ?", params.push(minSalary);
-        if(maxSalary) sql += " AND salary <= ?", params.push(maxSalary);
-        if(minAge) sql += " AND age >= ?", params.push(minAge);
-        if(maxAge) sql += " AND age <= ?", params.push(maxAge);
-
-        if(refUserId) {
-            if(filterType === "after") sql += " AND date_added > (SELECT date_added FROM names WHERE id = ?)", params.push(refUserId);
-            if(filterType === "sameDay") sql += " AND DATE(date_added) = (SELECT DATE(date_added) FROM names WHERE id = ?)", params.push(refUserId);
-        }
-
-        if(filterType === "neverSignedIn") sql += " AND signInCount IS NULL";
-        if(filterType === "registeredToday") sql += " AND DATE(date_added) = CURDATE()";
-
-        return await new Promise((resolve, reject) => {
-            connection.query(sql, params, (err, results) => {
-                if(err) reject(err);
-                else resolve(results);
-            });
-        });
-    } catch (err) {
-        console.error(err);
-        throw err;
-    }
-}
-
-    
 
 
    async insertNewName(name){
@@ -379,6 +238,106 @@ async searchUsers({ query, minSalary, maxSalary, minAge, maxAge, refUserId, filt
             console.log(error);
          }
    }
+
+   // start of advanced searches ***********
+   async searchByUserId(id) {
+    try {
+      const query = "SELECT * FROM names WHERE id = ?;";
+      const results = await new Promise((resolve, reject) => {
+        connection.query(query, [id], (err, res) => {
+          if (err) reject(err);
+          else resolve(res);
+        });
+      });
+      return results;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async searchBySalaryRange(min, max) {
+    try {
+      const query = "SELECT * FROM names WHERE salary BETWEEN ? AND ?;";
+      const results = await new Promise((resolve, reject) => {
+        connection.query(query, [min, max], (err, res) => {
+          if (err) reject(err);
+          else resolve(res);
+        });
+      });
+      return results;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async searchByAgeRange(min, max) {
+    try {
+      const query = "SELECT * FROM names WHERE age BETWEEN ? AND ?;";
+      const results = await new Promise((resolve, reject) => {
+        connection.query(query, [min, max], (err, res) => {
+          if (err) reject(err);
+          else resolve(res);
+        });
+      });
+      return results;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async searchAfterUser(userId) {
+    try {
+      const query = `
+        SELECT * FROM names 
+        WHERE date_added > (SELECT date_added FROM names WHERE id = ?);
+      `;
+      const results = await new Promise((resolve, reject) => {
+        connection.query(query, [userId], (err, res) => {
+          if (err) reject(err);
+          else resolve(res);
+        });
+      });
+      return results;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async searchNeverSignedIn() {
+    try {
+      const query = "SELECT * FROM names WHERE signInTime IS NULL;";
+      const results = await new Promise((resolve, reject) => {
+        connection.query(query, (err, res) => {
+          if (err) reject(err);
+          else resolve(res);
+        });
+      });
+      return results;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async searchSameDayAsUser(userId) {
+    try {
+      const query = `
+        SELECT * FROM names 
+        WHERE DATE(date_added) = (
+          SELECT DATE(date_added) FROM users WHERE id = ?
+        );
+      `;
+      const results = await new Promise((resolve, reject) => {
+        connection.query(query, [userId], (err, res) => {
+          if (err) reject(err);
+          else resolve(res);
+        });
+      });
+      return results;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  // end of advanced searches ***********
 
    async deleteRowById(id){
          try{

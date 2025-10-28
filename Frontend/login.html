@@ -1,50 +1,162 @@
 <!DOCTYPE html>
-<html lang="en"></html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="stylesheet.css">
   <title>Login Page</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #115740 50%, #FDB913 50%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: #115740;
+    }
+
+    main {
+      background-color: #ffffff;
+      padding: 2.5rem 3rem;
+      border-radius: 20px;
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+      width: 340px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+      color: #115740;
+    }
+
+    input {
+      display: block;
+      width: 100%;
+      padding: 0.8rem;
+      margin: 0.6rem 0;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      background-color: #f8fafc;
+      color: #115740;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    input:focus {
+      border-color: #115740;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.8rem;
+      margin-top: 0.8rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      color: white;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    #login-btn {
+      background-color: #115740;
+    }
+
+    #login-btn:hover {
+      background-color: #0d4d33;
+      transform: translateY(-2px);
+    }
+
+    #register-btn {
+      background-color: #FDB913;
+      color: #115740;
+    }
+
+    #register-btn:hover {
+      background-color: #f7b100;
+      transform: translateY(-2px);
+    }
+
+    #submit-register-btn {
+      background-color: #115740;
+    }
+
+    #submit-register-btn:hover {
+      background-color: #0d4d33;
+    }
+
+    #back {
+      background-color: #ccc;
+      color: #115740;
+    }
+
+    #back:hover {
+      background-color: #b3b3b3;
+    }
+
+    section {
+      margin-top: 1rem;
+    }
+
+    label {
+      display: block;
+      text-align: left;
+      margin-top: 0.6rem;
+      font-size: 0.9rem;
+      color: #115740;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+  </style>
 </head>
 <body>
-    <main>
-        <input type="text" id="login-username-input" placeholder="Username">
-        <input type="password" id="login-password-input" placeholder="Password">
-        <button id="login-btn">Login</button>
+  <main>
+    <h1>Login</h1>
+    <input type="text" id="login-username-input" placeholder="Username">
+    <input type="password" id="login-password-input" placeholder="Password">
+    <button id="login-btn">Login</button>
 
-        <section hidden>
-            <a href="index.html">
-            <button>Go to Main Page</button>
-            </a>
-        </section>
+    <section hidden>
+      <a href="index.html">
+        <button>Go to Main Page</button>
+      </a>
+    </section>
 
-        <br>
+    <br>
 
-        <!-- testing to see if i can add all inputs here -->
-         <!-- hiding section until register button is clicked -->
-        <button id="register-btn">Register</button>
+    <button id="register-btn">Register</button>
 
-        <section hidden id="register-section">
-            <label>First Name:</label>
-            <input type="text" id="firstname-input" placeholder="First Name">
-            <label>Last Name:</label>
-            <input type="text" id="lastname-input" placeholder="Last Name">
-            <label>Username:</label>
-            <input type="text" id="username-input" placeholder="Username">
-            <label>Password:</label>
-            <input type="password" id="password-input" placeholder="Password">
-            <label>Salary:</label>
-            <input type="number" id="salary-input" placeholder="Salary">
-            <label>Age:</label>
-            <input type="number" id="age-input" placeholder="Age">
-            <button id="submit-register-btn">Submit Registration</button>
-        </section>
+    <section hidden id="register-section">
+      <label>First Name:</label>
+      <input type="text" id="firstname-input" placeholder="First Name">
+      <label>Last Name:</label>
+      <input type="text" id="lastname-input" placeholder="Last Name">
+      <label>Username:</label>
+      <input type="text" id="username-input" placeholder="Username">
+      <label>Password:</label>
+      <input type="password" id="password-input" placeholder="Password">
+      <label>Salary:</label>
+      <input type="number" id="salary-input" placeholder="Salary">
+      <label>Age:</label>
+      <input type="number" id="age-input" placeholder="Age">
+      <button id="submit-register-btn">Submit Registration</button>
+    </section>
 
-        <br><br>
-        <a href="index.html">
-            <button id="back">Back</button>
-        </a>
-    </main>
+    <br><br>
+    <a href="index.html">
+      <button id="back">Back</button>
+    </a>
+  </main>
+
   <script src="login.js"></script>
 </body>
 </html>
