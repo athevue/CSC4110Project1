@@ -184,6 +184,12 @@ clearBtn.onclick = function () {
     const searchInput = document.querySelector('#search-input');
     searchInput.value = ""; // clear the search box
 
+    const minInput = document.querySelector('#min');
+    minInput.value = ""; // clear the min box
+
+    const maxInput = document.querySelector('#max');
+    maxInput.value = ""; // clear the max box
+
     // Fetch all data again
     fetch('http://localhost:5050/getAll')
         .then(response => response.json())

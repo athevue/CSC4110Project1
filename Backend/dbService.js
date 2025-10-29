@@ -214,46 +214,64 @@ class DbService{
       }
   }
   
-  
-   
 
-   async searchByName(name){
-        try{
-             const date_added = new Date();
-             // use await to call an asynchronous function
-             const response = await new Promise((resolve, reject) => 
-                  {
-                     const query = "SELECT * FROM names where name = ?;";
-                     connection.query(query, [name], (err, results) => {
-                         if(err) reject(new Error(err.message));
-                         else resolve(results);
-                     });
-                  }
-             );
-
-             // console.log(response);  // for debugging to see the result of select
-             return response;
-
-         }  catch(error){
-            console.log(error);
-         }
-   }
-
-   // start of advanced searches ***********
-   async searchByUserId(id) {
+  async searchByName(name) {
     try {
-      const query = "SELECT * FROM names WHERE id = ?;";
-      const results = await new Promise((resolve, reject) => {
-        connection.query(query, [id], (err, res) => {
-          if (err) reject(err);
-          else resolve(res);
+      // split the input by space
+      const parts = name.trim().split(" ");
+      let query, params;
+  
+      if (parts.length === 2) {
+        // first and last name provided
+        query = `
+          SELECT * FROM names
+          WHERE (name LIKE ? AND lastName LIKE ?)
+             OR CONCAT(name, ' ', lastName) LIKE ?;
+        `;
+        params = [`%${parts[0]}%`, `%${parts[1]}%`, `%${name}%`];
+      } else {
+        // only one word provided
+        query = `
+          SELECT * FROM names
+          WHERE name LIKE ? OR lastName LIKE ?;
+        `;
+        params = [`%${name}%`, `%${name}%`];
+      }
+  
+      const response = await new Promise((resolve, reject) => {
+        connection.query(query, params, (err, results) => {
+          if (err) reject(new Error(err.message));
+          else resolve(results);
         });
       });
-      return results;
+  
+      return response;
     } catch (error) {
       console.log(error);
     }
   }
+  
+
+   // start of advanced searches ***********
+   async searchByUserId(id) {
+    try {
+      const userId = parseInt(id, 10); // ensure it's a number
+      const query = "SELECT * FROM names WHERE id = ?;";
+  
+      const results = await new Promise((resolve, reject) => {
+        connection.query(query, [userId], (err, results) => {
+          if (err) reject(err);
+          else resolve(results);
+        });
+      });
+  
+      return results; // array of rows (empty if not found)
+    } catch (error) {
+      console.log(error);
+      return []; // always return an array to keep frontend code consistent
+    }
+  }
+  
 
   async searchBySalaryRange(min, max) {
     try {

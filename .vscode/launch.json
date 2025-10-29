@@ -7,11 +7,30 @@
 
 
         {
+            "name": "Attach to Chrome",
+            "port": 9222,
+            "request": "attach",
+            "type": "chrome",
+            "webRoot": "${workspaceFolder}"
+        },
+
+
+        {
             "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
             "url": "http://localhost/database_javascript/project1/Frontend/index.html",
             "webRoot": "${workspaceFolder}"
+        },
+
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Node Backend",
+            "program": "${workspaceFolder}/Backend/app.js",
+            "cwd": "${workspaceFolder}/Backend",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen"
         }
     ]
 }

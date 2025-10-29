@@ -34,7 +34,7 @@
     }
 
     input, select {
-      padding: 0.7rem;
+      padding: 0.5rem;
       margin: 0.4rem 0.3rem;
       border-radius: 8px;
       border: 1px solid #d1d5db;
@@ -61,8 +61,13 @@
     }
 
     button:hover {
-      background-color: #0d4d33;
+      background-color: #f7b100;
       transform: translateY(-2px);
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
     }
 
     #register-btn {
@@ -138,7 +143,7 @@
 
 <body>
   <main>
-    <h1>Database Management Project</h1>
+    <h1>Database Management Project (Late Pass)</h1>
     
     <input type="text" id="firstname-input" placeholder="First Name">
     <input type="text" id="lastname-input" placeholder="Last Name">
@@ -146,8 +151,10 @@
     <input type="password" id="password-input" placeholder="Password">
     <input type="number" id="salary-input" placeholder="Salary">
     <input type="number" id="age-input" placeholder="Age">
-    <button id="register-btn">Register</button>
-
+    <div class="button-container">
+      <button id="register-btn">Register</button>
+    </div>
+    
     <br><br><br>
 
     <div>
