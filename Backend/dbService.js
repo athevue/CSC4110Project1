@@ -255,9 +255,13 @@ class DbService{
    // start of advanced searches ***********
    async searchByUserId(id) {
     try {
-      const userId = parseInt(id, 10); // ensure it's a number
-      const query = "SELECT * FROM names WHERE id = ?;";
+      const userId = parseInt(id, 10);
+      if (isNaN(userId)) {
+        console.log("Invalid ID:", id);
+        return [];
+      }
   
+      const query = "SELECT * FROM names WHERE id = ?;";
       const results = await new Promise((resolve, reject) => {
         connection.query(query, [userId], (err, results) => {
           if (err) reject(err);
@@ -265,12 +269,14 @@ class DbService{
         });
       });
   
-      return results; // array of rows (empty if not found)
+      console.log("searchByUserId results:", results);
+      return results;
     } catch (error) {
       console.log(error);
-      return []; // always return an array to keep frontend code consistent
+      return [];
     }
   }
+  
   
 
   async searchBySalaryRange(min, max) {
@@ -303,23 +309,33 @@ class DbService{
     }
   }
 
-  async searchAfterUser(userId) {
+  async searchAfterUser(name) {
     try {
       const query = `
-        SELECT * FROM names 
-        WHERE date_added > (SELECT date_added FROM names WHERE id = ?);
+        SELECT * FROM names
+        WHERE date_added > (
+          SELECT date_added
+          FROM names
+          WHERE name = ?
+          ORDER BY date_added ASC
+          LIMIT 1
+        );
       `;
+  
       const results = await new Promise((resolve, reject) => {
-        connection.query(query, [userId], (err, res) => {
+        connection.query(query, [name], (err, res) => {
           if (err) reject(err);
           else resolve(res);
         });
       });
+  
       return results;
     } catch (error) {
       console.log(error);
+      return [];
     }
   }
+  
 
   async searchNeverSignedIn() {
     try {
@@ -336,23 +352,51 @@ class DbService{
     }
   }
 
-  async searchSameDayAsUser(userId) {
+  async searchSameDayAsUser(name) {
     try {
       const query = `
-        SELECT * FROM names 
-        WHERE DATE(date_added) = (
-          SELECT DATE(date_added) FROM users WHERE id = ?
+        SELECT * FROM names
+        WHERE DATE(date_added) IN (
+          SELECT DATE(date_added)
+          FROM names
+          WHERE name = ?
         );
       `;
+      
       const results = await new Promise((resolve, reject) => {
-        connection.query(query, [userId], (err, res) => {
+        connection.query(query, [name], (err, res) => {
           if (err) reject(err);
           else resolve(res);
         });
       });
+  
       return results;
     } catch (error) {
       console.log(error);
+      return [];
+    }
+  }
+  
+  async searchUsersRegisteredToday() {
+    try {
+      
+      const query = `
+        SELECT * 
+        FROM names 
+        WHERE DATE(date_added) = CURDATE();
+      `;
+  
+      const results = await new Promise((resolve, reject) => {
+        connection.query(query, (err, res) => {
+          if (err) reject(err);
+          else resolve(res);
+        });
+      });
+  
+      return results;
+    } catch (error) {
+      console.log(error);
+      return [];
     }
   }
   // end of advanced searches ***********

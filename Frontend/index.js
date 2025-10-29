@@ -145,26 +145,29 @@ searchBtn.onclick = function () {
 
   switch (typeSelect) {
     case "name":
-      url += `type=name&name=${searchInput}`;
+      url += `type=name&name=${encodeURIComponent(searchInput)}`;
       break;
-    case "userid":
-      url += `type=userid&userid=${searchInput}`;
+    case "id":
+      url += `type=id&id=${encodeURIComponent(searchInput)}`;
       break;
     case "salary":
-      url += `type=salary&min=${min}&max=${max}`;
+      url += `type=salary&min=${encodeURIComponent(min)}&max=${encodeURIComponent(max)}`;
       break;
     case "age":
-      url += `type=age&min=${min}&max=${max}`;
+      url += `type=age&min=${encodeURIComponent(min)}&max=${encodeURIComponent(max)}`;
       break;
     case "afterUser":
-      url += `type=afterUser&userid=${searchInput}`;
+      url += `type=afterUser&name=${encodeURIComponent(searchInput)}`;
       break;
     case "neverSignedIn":
       url += `type=neverSignedIn`;
       break;
     case "sameDay":
-      url += `type=sameDay&userid=${searchInput}`;
+      url += `type=sameDay&name=${encodeURIComponent(searchInput)}`;
       break;
+      case "registeredToday":
+        url += `type=registeredToday`;
+        break;
     default:
       url += `type=all`;
   }
@@ -174,6 +177,7 @@ searchBtn.onclick = function () {
     .then(data => loadHTMLTable(data['data']))
     .catch(err => console.error(err));
 };
+
 
 
 

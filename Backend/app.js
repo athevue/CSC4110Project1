@@ -115,14 +115,17 @@ app.get('/search', (req, res) => {
         result = db.searchByAgeRange(min, max);
         break;
       case "afterUser":
-        result = db.searchAfterUser(id);
+        result = db.searchAfterUser(name);
         break;
       case "neverSignedIn":
         result = db.searchNeverSignedIn();
         break;
       case "sameDay":
-        result = db.searchSameDayAsUser(id);
+        result = db.searchSameDayAsUser(name);
         break;
+        case "registeredToday":
+          result = db.searchUsersRegisteredToday(); 
+          break;
       default:
         result = db.getAllData();
     }
